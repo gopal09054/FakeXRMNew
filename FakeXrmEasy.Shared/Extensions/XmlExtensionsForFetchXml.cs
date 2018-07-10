@@ -25,7 +25,8 @@ namespace FakeXrmEasy.Extensions.FetchXml
             ConditionOperator.LastXHours,
             ConditionOperator.LastXMonths,
             ConditionOperator.LastXWeeks,
-            ConditionOperator.LastXYears
+            ConditionOperator.LastXYears,
+            ConditionOperator.NextXWeeks
         };
 
         public static bool IsAttributeTrue(this XElement elem, string attributeName)
@@ -470,6 +471,9 @@ namespace FakeXrmEasy.Extensions.FetchXml
                     break;
                 case "neq-businessid":
                     op = ConditionOperator.NotEqualBusinessId;
+                    break;
+                case "next-x-weeks":
+                    op = ConditionOperator.NextXWeeks;
                     break;
                 default:
                     throw PullRequestException.FetchXmlOperatorNotImplemented(elem.GetAttribute("operator").Value);

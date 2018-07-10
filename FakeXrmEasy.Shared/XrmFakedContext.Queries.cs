@@ -676,6 +676,10 @@ namespace FakeXrmEasy
 
                     operatorExpression = TranslateConditionExpressionOlderThan(c, getNonBasicValueExpr, containsAttributeExpression, olderThanDate);
                     break;
+
+                case ConditionOperator.NextXWeeks:
+                    operatorExpression = TranslateConditionExpressionNext(c, getNonBasicValueExpr, containsAttributeExpression);
+
                 default:
                     throw new PullRequestException(string.Format("Operator {0} not yet implemented for condition expression", c.CondExpression.Operator.ToString()));
 
@@ -1675,6 +1679,27 @@ namespace FakeXrmEasy
                 return filtersLambda;
 
             return Expression.Constant(true); //Satisfy filter if there are no conditions nor filters
+        }
+        protected static Expression TranslateConditionExpressionNext(TypedConditionExpression tc, Expression getAttributeValueExpr, Expression containsAttributeExpr)
+        {
+            var c = tc.CondExpression;
+
+            var nextDateTime = default(DateTime);
+            var currentDateTime = DateTime.UtcNow;
+            var numberOfWeeks = (int)c.Values[0];
+
+            switch (c.Operator)
+            {
+                case ConditionOperator.NextXWeeks:
+                    nextDateTime = currentDateTime.AddDays(7 * numberOfWeeks);
+                    break;
+            }
+
+            c.Values[0] = (currentDateTime);
+            c.Values.Add(nextDateTime);
+            c.Values.Add(numberOfWeeks);
+
+            return TranslateConditionExpressionBetween(tc, getAttributeValueExpr, containsAttributeExpr);
         }
     }
 }
