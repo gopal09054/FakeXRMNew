@@ -741,3 +741,4 @@ namespace FakeXrmEasy.Extensions.FetchXml
         }
     }
 }
+ 
